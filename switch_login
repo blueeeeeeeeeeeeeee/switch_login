@@ -1,0 +1,21 @@
+#!/usr/bin/python3.6
+# -*- coding: UTF-8 -*-
+import pexpect
+import base64
+import sys
+import time
+ip = sys.argv[1]   # 从键盘获取登录ip
+
+user = base64.b64decode('cm9vdA==').decode('utf-8')  # 提前写好的BASE64 CODE过的用户名
+pwd = base64.b64decode('V2VsY29tZUA4ODgh').decode('utf-8')   # 提前写好的BASE64 CODE过的密码
+login = pexpect.spawn('ssh %s@%s' % (user, ip), timeout=10)   # 执行这行shell命令
+index = login.expect(['continue', 'word:'])
+
+if index == 0:
+        login.sendline('yes')
+        time.sleep(1)
+        login.sendline(pwd)
+elif index == 1:
+        login.sendline(pwd)
+
+login.interact()
